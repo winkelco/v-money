@@ -1,9 +1,11 @@
-<template lang="html">
+<template>
   <input type="tel"
-         :value="formattedValue"
-         @change="change"
-         v-money="{precision, decimal, thousands, prefix, suffix}"
-         class="v-money" />
+        :id="id"
+        :value="formattedValue"
+        @change="change"
+        @blur="blur"
+        v-money="{precision, decimal, thousands, prefix, suffix, disableNegative, min, max}"
+        class="v-money" />
 </template>
 
 <script>
@@ -14,6 +16,11 @@ import {format, unformat} from './utils'
 export default {
   name: 'Money',
   props: {
+    id: {
+      required: false,
+      type: [Number, String],
+      default: 0
+    },
     value: {
       required: true,
       type: [Number, String],
@@ -42,7 +49,19 @@ export default {
     suffix: {
       type: String,
       default: () => defaults.suffix
-    }
+    },
+    disableNegative: {
+      type: Boolean,
+      default: false
+    },
+    max: {
+      type: Number,
+      default: () => defaults.max
+    },
+    min: {
+      type: Number,
+      default: () => defaults.min
+    },
   },
 
   directives: {money},
@@ -68,7 +87,12 @@ export default {
   methods: {
     change (evt) {
       this.$emit('input', this.masked ? evt.target.value : unformat(evt.target.value, this))
+    },
+
+    blur(evt) {
+      this.$emit('blur', evt)
     }
+
   }
 }
 </script>
