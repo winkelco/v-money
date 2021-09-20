@@ -4,10 +4,18 @@ function format (input, opt = defaults) {
   if (!isNaN(input)) {
     input = Number(input).toFixed(fixed(opt.precision))
   }
-  var negative = input.indexOf('-') >= 0 ? '-' : ''
+  const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? '-' : '') : ''
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '')
   const numbers = onlyNumbers(filtered)
-  const currency = numbersToCurrency(numbers, opt.precision)
+  
+  let currency = Number(numbersToCurrency(numbers, opt.precision));
+  if (currency > opt.max) {
+    currency = opt.max
+  } else if (input < opt.min) {
+    currency = opt.min
+  }
+  currency = currency.toFixed(fixed(opt.precision))
+
   const parts = toStr(currency).split('.')
   let integer = parts[0]
   const decimal = parts[1]
@@ -16,8 +24,7 @@ function format (input, opt = defaults) {
 }
 
 function unformat (input, opt = defaults) {
-  var negative = input.indexOf('-') >= 0 ? -1 : 1
-  
+  const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? -1 : 1) : 1;
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '')
   const numbers = onlyNumbers(filtered)
   const currency = numbersToCurrency(numbers, opt.precision)
@@ -60,7 +67,9 @@ function toStr (value) {
 }
 
 function setCursor (el, position) {
-  var setSelectionRange = function () { el.setSelectionRange(position, position) }
+  var setSelectionRange = function () {
+    el.setSelectionRange(position, position)
+  }
   if (el === document.activeElement) {
     setSelectionRange()
     setTimeout(setSelectionRange, 1) // Android Fix
@@ -72,6 +81,11 @@ function event (name) {
   var evt = document.createEvent('Event')
   evt.initEvent(name, true, true)
   return evt
+}
+
+function isNormalInteger(str) {
+  const n = Math.floor(Number(str));
+  return n !== Infinity && String(n) === str && n >= 0;
 }
 
 export {
