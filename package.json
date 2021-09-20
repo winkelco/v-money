@@ -1,8 +1,8 @@
 {
   "name": "v-money",
-  "version": "0.8.1",
+  "version": "1.0.0",
   "description": "Vue currency input/directive mask",
-  "main": "dist/v-money.js",
+  "main": "src/index.js",
   "scripts": {
     "size": "size-limit",
     "upgrade:check": "ncu",
@@ -23,15 +23,15 @@
     "money"
   ],
   "files": [
-    "dist/"
+    "src/"
   ],
   "size-limit": [
     {
-      "path": "dist/v-money.js",
+      "path": "src/index.js",
       "limit": "1.6 KB"
     }
   ],
-  "author": "Marcos Neves <marcos.neves@gmail.com> (https://vuejs-tips.github.io/)",
+  "author": "Andres Daza <webmaster@winkel.com.co> (https://github.com/winkelco/v-money/)",
   "license": "MIT",
   "devDependencies": {
     "babel-jest": "^21.2.0",
