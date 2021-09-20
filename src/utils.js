@@ -5,20 +5,22 @@ function format (input, opt = defaults) {
     input = Number(input).toFixed(fixed(opt.precision))
   }
   var negative = input.indexOf('-') >= 0 ? '-' : ''
-
-  var numbers = onlyNumbers(input)
-  var currency = numbersToCurrency(numbers, opt.precision)
-  var parts = toStr(currency).split('.')
-  var integer = parts[0]
-  var decimal = parts[1]
+  const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '')
+  const numbers = onlyNumbers(filtered)
+  const currency = numbersToCurrency(numbers, opt.precision)
+  const parts = toStr(currency).split('.')
+  let integer = parts[0]
+  const decimal = parts[1]
   integer = addThousandSeparator(integer, opt.thousands)
   return opt.prefix + negative + joinIntegerAndDecimal(integer, decimal, opt.decimal) + opt.suffix
 }
 
-function unformat (input, precision) {
+function unformat (input, opt = defaults) {
   var negative = input.indexOf('-') >= 0 ? -1 : 1
-  var numbers = onlyNumbers(input)
-  var currency = numbersToCurrency(numbers, precision)
+  
+  const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '')
+  const numbers = onlyNumbers(filtered)
+  const currency = numbersToCurrency(numbers, opt.precision)
   return parseFloat(currency) * negative
 }
 
@@ -45,9 +47,9 @@ function addThousandSeparator (integer, separator) {
   return integer.replace(/(\d)(?=(?:\d{3})+\b)/gm, `$1${separator}`)
 }
 
-function currencyToIntegerAndDecimal (float) {
-  return toStr(float).split('.')
-}
+// function currencyToIntegerAndDecimal (float) {
+//  return toStr(float).split('.')
+// }
 
 function joinIntegerAndDecimal (integer, decimal, separator) {
   return decimal ? integer + separator + decimal : integer
