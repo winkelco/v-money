@@ -1,8 +1,8 @@
 import defaults from './options'
 
 function format (input, opt = defaults) {
-  if (typeof input === 'number') {
-    input = input.toFixed(fixed(opt.precision))
+  if (!isNaN(input)) {
+    input = Number(input).toFixed(fixed(opt.precision))
   }
   var negative = input.indexOf('-') >= 0 ? '-' : ''
 
